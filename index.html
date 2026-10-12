@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Classical Cryptography Toolkit — An interactive web-based tool demonstrating classical encryption and decryption algorithms including Caesar, Monoalphabetic, Playfair, Hill, Vigenère, One-Time Pad, Rail Fence, and Columnar Transposition ciphers.">
+  <title>Classical Cryptography Toolkit</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Mobile Menu Button -->
+  <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div class="sidebar-overlay"></div>
+
+  <div class="app-layout">
+    <!-- ═══ Sidebar ═══ -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="sidebar-logo" onclick="navigate('dashboard'); return false;">
+          <div class="logo-icon">🔐</div>
+          <div class="logo-text">
+            Crypto Toolkit
+            <small>Classical Ciphers</small>
+          </div>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Main</div>
+          <button class="nav-item active" data-page="dashboard">
+            <span class="nav-icon">🏠</span> Dashboard
+          </button>
+          <button class="nav-item" data-page="compare">
+            <span class="nav-icon">⚖️</span> Compare Algorithms
+          </button>
+          <button class="nav-item" data-page="help">
+            <span class="nav-icon">❓</span> Help &amp; Guide
+          </button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Substitution Ciphers</div>
+          <button class="nav-item" data-page="caesar">
+            <span class="nav-icon">🔄</span> Caesar
+          </button>
+          <button class="nav-item" data-page="monoalphabetic">
+            <span class="nav-icon">🔤</span> Monoalphabetic
+          </button>
+          <button class="nav-item" data-page="playfair">
+            <span class="nav-icon">🔲</span> Playfair
+          </button>
+          <button class="nav-item" data-page="hill">
+            <span class="nav-icon">📐</span> Hill
+          </button>
+          <button class="nav-item" data-page="vigenere">
+            <span class="nav-icon">🔑</span> Vigenère
+          </button>
+          <button class="nav-item" data-page="otp">
+            <span class="nav-icon">🎲</span> One-Time Pad
+          </button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Transposition Ciphers</div>
+          <button class="nav-item" data-page="railfence">
+            <span class="nav-icon">🚧</span> Rail Fence
+          </button>
+          <button class="nav-item" data-page="columnar">
+            <span class="nav-icon">📊</span> Columnar
+          </button>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ═══ Main Content ═══ -->
+    <main class="main-content">
+
+      <!-- ──── Dashboard Page ──── -->
+      <div class="page active" id="page-dashboard">
+        <div class="hero">
+          <div class="hero-badge">🔐 College Mini Project</div>
+          <h1>Classical <span>Cryptography</span> Toolkit</h1>
+          <p>
+            An interactive web-based application that demonstrates classical encryption and decryption techniques.
+            Explore eight fundamental cipher algorithms, understand how they transform plaintext into ciphertext,
+            and verify results with built-in decryption.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="navigate('caesar')">▶ Start Encrypting</button>
+            <button class="btn btn-secondary" onclick="navigate('compare')">⚖️ Compare Algorithms</button>
+            <button class="btn btn-secondary" onclick="navigate('help')">❓ Help &amp; Guide</button>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <h2>Substitution Ciphers</h2>
+          <p>Algorithms that replace plaintext characters with different characters.</p>
+        </div>
+        <div class="cipher-grid" id="sub-cipher-grid"></div>
+
+        <div class="section-header">
+          <h2>Transposition Ciphers</h2>
+          <p>Algorithms that rearrange the positions of plaintext characters.</p>
+        </div>
+        <div class="cipher-grid" id="trans-cipher-grid"></div>
+      </div>
+
+      <!-- ──── Compare Algorithms Page ──── -->
+      <div class="page" id="page-compare">
+        <div class="page-title-bar">
+          <button class="back-btn" onclick="navigate('dashboard')" title="Back to Dashboard">←</button>
+          <h2>⚖️ Compare Algorithms</h2>
+        </div>
+
+        <div class="compare-controls">
+          <div class="form-group">
+            <label>Plaintext Input</label>
+            <textarea id="compare-input" placeholder="Enter text to encrypt with multiple algorithms..." rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Select Algorithms (2 or more)</label>
+            <div class="compare-algo-checks" id="compare-algo-checks"></div>
+          </div>
+
+          <div class="compare-keys-section" id="compare-keys-section"></div>
+
+          <div id="compare-msg" class="msg"></div>
+
+          <div class="action-bar">
+            <button class="btn btn-primary" onclick="runCompare()">▶ Compare</button>
+          </div>
+        </div>
+
+        <div class="compare-results" id="compare-results"></div>
+      </div>
+
+      <!-- ──── Help Page ──── -->
+      <div class="page" id="page-help">
+        <div class="page-title-bar">
+          <button class="back-btn" onclick="navigate('dashboard')" title="Back to Dashboard">←</button>
+          <h2>❓ Help &amp; Guide</h2>
+        </div>
+
+        <div class="help-content">
+          <div class="help-section">
+            <h3>📖 How to Use This Toolkit</h3>
+            <ul>
+              <li>Select a cipher from the sidebar or click a card on the dashboard.</li>
+              <li>Choose <strong>Encrypt</strong> or <strong>Decrypt</strong> mode using the toggle.</li>
+              <li>Enter your text in the input field.</li>
+              <li>Enter the required key for the selected cipher.</li>
+              <li>Click <strong>Run</strong> to see the result.</li>
+              <li>The verification section shows the reverse operation to confirm correctness.</li>
+              <li>Use <strong>Swap to Input</strong> to copy the output back into the input for further operations.</li>
+              <li>Use <strong>Compare Algorithms</strong> to encrypt the same text with multiple ciphers at once.</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>🔒 What is Encryption?</h3>
+            <p>
+              <strong>Encryption</strong> is the process of converting readable text (plaintext) into an unreadable format (ciphertext)
+              using a specific algorithm and a key. Only someone with the correct key can reverse the process.
+            </p>
+            <p>
+              <strong>Decryption</strong> is the reverse — converting ciphertext back into the original plaintext using the same key
+              and the inverse of the encryption algorithm.
+            </p>
+          </div>
+
+          <div class="help-section">
+            <h3>📋 Algorithm Reference</h3>
+            <table class="help-algo-table">
+              <thead>
+                <tr>
+                  <th>Algorithm</th>
+                  <th>Type</th>
+                  <th>Key Required</th>
+                  <th>Key Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🔄 Caesar Cipher</td>
+                  <td>Substitution</td>
+                  <td>Integer shift value</td>
+                  <td><code>3</code></td>
+                </tr>
+                <tr>
+                  <td>🔤 Monoalphabetic Cipher</td>
+                  <td>Substitution</td>
+                  <td>26-letter substitution alphabet</td>
+                  <td><code>QWERTYUIOPASDFGHJKLZXCVBNM</code></td>
+                </tr>
+                <tr>
+                  <td>🔲 Playfair Cipher</td>
+                  <td>Substitution</td>
+                  <td>Keyword</td>
+                  <td><code>MONARCHY</code></td>
+                </tr>
+                <tr>
+                  <td>📐 Hill Cipher</td>
+                  <td>Substitution</td>
+                  <td>2×2 or 3×3 integer matrix</td>
+                  <td><code>3,3;2,5</code></td>
+                </tr>
+                <tr>
+                  <td>🔑 Vigenère Cipher</td>
+                  <td>Substitution</td>
+                  <td>Keyword (letters)</td>
+                  <td><code>LEMON</code></td>
+                </tr>
+                <tr>
+                  <td>🎲 One-Time Pad</td>
+                  <td>Substitution</td>
+                  <td>Key same length as text letters</td>
+                  <td><code>XMCKL</code> (for 5-letter text)</td>
+                </tr>
+                <tr>
+                  <td>🚧 Rail Fence Cipher</td>
+                  <td>Transposition</td>
+                  <td>Number of rails (integer ≥ 2)</td>
+                  <td><code>3</code></td>
+                </tr>
+                <tr>
+                  <td>📊 Columnar Transposition</td>
+                  <td>Transposition</td>
+                  <td>Keyword or column order</td>
+                  <td><code>ZEBRAS</code> or <code>3,1,4,2</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="help-section">
+            <h3>⚠️ Valid Input Requirements</h3>
+            <ul>
+              <li><strong>Text Input:</strong> Enter any text. Most ciphers handle letters, spaces, and punctuation. Some (like Hill, Playfair) operate only on letters and will strip other characters.</li>
+              <li><strong>Keys:</strong> Each cipher has specific key requirements. Invalid keys will display clear error messages.</li>
+              <li><strong>Case:</strong> Caesar, Vigenère, Monoalphabetic, and One-Time Pad preserve letter case. Hill, Playfair output uppercase only.</li>
+              <li><strong>Empty Input:</strong> An error message will be shown if you try to run an operation with empty text.</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>❓ Common Errors</h3>
+            <ul>
+              <li><strong>"Key must be exactly 26 letters"</strong> — The Monoalphabetic key needs every letter A-Z exactly once.</li>
+              <li><strong>"Matrix is not invertible mod 26"</strong> — The Hill Cipher key matrix determinant shares a factor with 26. Choose a different matrix.</li>
+              <li><strong>"Key length must equal the number of letters"</strong> — The One-Time Pad key must have exactly as many letters as the input text (ignoring spaces/punctuation).</li>
+              <li><strong>"Number of rails must be ≥ 2"</strong> — Rail Fence requires at least 2 rails.</li>
+              <li><strong>"Ciphertext length must be even"</strong> — Playfair works in pairs; the ciphertext must have an even number of letters.</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>⚠️ Security Notice</h3>
+            <p>This toolkit is an <strong>educational project</strong> designed to demonstrate classical cryptographic algorithms.</p>
+            <div class="warning-box">
+              ⚠️ <strong>Warning:</strong> Classical ciphers (Caesar, Vigenère, Playfair, Hill, etc.) are NOT secure by modern standards.
+              They are vulnerable to frequency analysis, known-plaintext attacks, and brute-force methods.
+              <strong>Do not use these ciphers for protecting sensitive or real-world data.</strong>
+              Modern applications should use established cryptographic standards like AES, RSA, or TLS.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ──── Cipher Pages Container (generated by JS) ──── -->
+      <div id="cipher-pages-container"></div>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/ciphers.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
